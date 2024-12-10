@@ -457,9 +457,9 @@ ul {
 
 .main-header__logo {
   position: absolute;
-  background-color: var(--ogenix-black);
+  /* background-color: var(--ogenix-black); */
   padding: 0px 60px 0px;
-  top: 0;
+  /* top: 31px; */
   bottom: 0;
   left: 0;
   display: flex;
@@ -467,6 +467,16 @@ ul {
   justify-content: center;
   z-index: 2;
 }
+.main-header__logo img{
+  height: 62px;
+    margin-bottom: 15px;
+}
+@media screen and (max-width: 750px) {
+  .main-header__logo {
+    padding-left: 20px;
+  }
+}
+
 
 .main-header__right {
   display: block;
@@ -5289,7 +5299,9 @@ ul {
   position: relative;
   display: block;
 }
-
+.footer-widget__logo img{
+height: 60px;
+}
 .footer-widget__about-text-box {
   position: relative;
   display: block;
@@ -11923,6 +11935,7 @@ ul {
   color: #37542b;
   transition: all 200ms linear;
   transition-delay: 0.1s;
+  display: none;
 }
 
 .products__all-icon-boxes a:hover {
