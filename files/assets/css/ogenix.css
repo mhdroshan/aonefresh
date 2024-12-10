@@ -457,15 +457,24 @@ ul {
 
 .main-header__logo {
   position: absolute;
-  background-color: var(--ogenix-black);
+  /* background-color: var(--ogenix-black); */
   padding: 0px 60px 0px;
-  top: 0;
+  /* top: 31px; */
   bottom: 0;
   left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
+}
+.main-header__logo img{
+  height: 62px;
+    margin-bottom: 15px;
+}
+@media screen and (max-width: 750px) {
+  .main-header__logo {
+    padding-left: 20px;
+  }
 }
 
 .main-header__right {
