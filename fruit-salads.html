@@ -801,52 +801,48 @@
 
         <!-- template js -->
         <script src="assets/js/ogenix.js"></script>
-        <script>
-            const products = [
-                { id: 1, name: "Normal Fruit Salad", price: 70 },
-                { id: 2, name: "Diet Fruit Salad", price: 100 },
-                { id: 3, name: "A One Special Fruit Salad", price: 150 }
-            ];
+            <script>
             const allItemsContainer = document.querySelector('.all-items');
+            const githubJsonURL = 'https://raw.githubusercontent.com/mhdroshan/aonefresh/main/files/DB/fruit-salads.json';            // Replace with your raw URL
 
-            products.forEach(product => {
-                const cardHTML = `
-        <div class="col-xl-4 col-lg-4 col-md-6">
-            <div class="product__all-single">
-                <div class="product__all-single-inner">
-                    <div class="product__all-img">
-                        <img src="assets/images/shop/shop-fruit-salad.jpg" alt="${product.name}">
-                    </div>
-                    <div class="product__all-content">
-                        <div class="product__all-review">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
+            // Fetch JSON from GitHub
+            fetch(githubJsonURL)
+                .then(response => response.json())
+                .then(products => {
+                    products.forEach(product => {
+                        const cardHTML = `
+                        <div class="col-xl-4 col-lg-4 col-md-6">
+                            <div class="product__all-single">
+                                <div class="product__all-single-inner">
+                                    <div class="product__all-img">
+                                        <img src="${product.image}" alt="${product.name}">
+                                    </div>
+                                    <div class="product__all-content">
+                                        <div class="product__all-review">
+                                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                        </div>
+                                        <h4 class="product__all-title">
+                                            <a href="https://wa.me/+919656412101?text=Hi, I'm interested in ${product.name}">${product.name}</a>
+                                        </h4>
+                                        <p class="product__all-price">$${product.price.toFixed(2)}</p>
+                                        <div class="product__all-btn-box">
+                                            <a href="https://wa.me/+919656412101?text=Hi, I'm interested in ${product.name}" target="_blank" class="thm-btn product__all-btn">Buy now</a>
+                                        </div>
+                                    </div>
+                                    <div class="products__all-icon-boxes">
+                                        <a href="#"><i class="far fa-heart"></i></a>
+                                        <a href="#"><i class="fas fa-eye"></i></a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <h4 class="product__all-title">
-                            <a href="https://wa.me/+919656412101?text=Hi, I'm interested in ${product.name}">${product.name}</a>
-                        </h4>
-                        <p class="product__all-price">$${product.price.toFixed(2)}</p>
-                        <div class="product__all-btn-box">
-                            <a href="https://wa.me/+919656412101?text=Hi, I'm interested in ${product.name}" target="_blank" class="thm-btn product__all-btn">Buy now</a>
-                        </div>
-                    </div>
-                    <div class="products__all-icon-boxes">
-                        <a href="#"><i class="far fa-heart"></i></a>
-                        <a href="#"><i class="fas fa-eye"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-
-                // Append the card to the container
-                allItemsContainer.insertAdjacentHTML('beforeend', cardHTML);
-            });
-
+                        `;
+                        allItemsContainer.insertAdjacentHTML('beforeend', cardHTML);
+                    });
+                })
+                .catch(error => console.error('Error fetching products:', error));
         </script>
+
     </body>
 
 </html>
