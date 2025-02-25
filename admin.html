@@ -61,7 +61,7 @@
                             </div>
                             <div class="mb-3">
                                 <label>Current Image:</label><br>
-                                <img src="${product.image}" alt="${product.name}" width="100"><br><br>
+                                <img src="${product.image || ''}" alt="${product.name}" width="100"><br><br>
                                 <label>New Image (optional):</label>
                                 <input type="file" class="form-control" id="image-upload-${index}" accept="image/*">
                             </div>
@@ -96,7 +96,6 @@
                         resolve(`https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/${imageFolderPath}${imageName}`);
                     } catch (error) {
                         if (error.response && error.response.status === 404) {
-                            // Image doesn't exist, create new
                             await axios.put(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${imageFolderPath}${imageName}`, {
                                 message: `Added new image ${imageName}`,
                                 content: base64Content,
@@ -133,12 +132,17 @@
                         imageUrl = await uploadImage(imageUpload, imageName);
                     }
 
-                    updatedProducts.push({
+                    const product = {
                         id: index + 1,
                         name: name,
-                        price: price,
-                        image: imageUrl
-                    });
+                        price: price
+                    };
+
+                    if (imageUrl) {
+                        product.image = imageUrl;
+                    }
+
+                    updatedProducts.push(product);
                 }
 
                 const updatedContent = btoa(JSON.stringify(updatedProducts, null, 2));
