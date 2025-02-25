@@ -116,52 +116,51 @@
         }
 
         document.getElementById('save-btn').addEventListener('click', async () => {
-            const cards = document.querySelectorAll('.card');
-            const updatedProducts = [];
+    const cards = document.querySelectorAll('.card');
+    const updatedProducts = [];
 
-            try {
-                for (let index = 0; index < cards.length; index++) {
-                    const name = document.getElementById(`name-${index}`).value;
-                    const price = parseFloat(document.getElementById(`price-${index}`).value);
-                    const imageUpload = document.getElementById(`image-upload-${index}`).files[0];
+    try {
+        for (let index = 0; index < cards.length; index++) {
+            const name = document.getElementById(`name-${index}`).value;
+            const price = parseFloat(document.getElementById(`price-${index}`).value);
+            const imageUpload = document.getElementById(`image-upload-${index}`).files[0];
 
-                    let imageUrl = document.querySelector(`#image-upload-${index}`).previousElementSibling.src;
+            let imageUrl = document.querySelector(`#image-upload-${index}`).previousElementSibling.src;
 
-                    if (imageUpload) {
-                        const imageName = `${name.replace(/\s+/g, '_').toLowerCase()}.png`;
-                        imageUrl = await uploadImage(imageUpload, imageName);
-                    }
-
-                    const product = {
-                        id: index + 1,
-                        name: name,
-                        price: price
-                    };
-
-                    if (imageUrl) {
-                        product.image = imageUrl;
-                    }
-
-                    updatedProducts.push(product);
-                }
-
-                const updatedContent = btoa(JSON.stringify(updatedProducts, null, 2));
-                await axios.put(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${dataFilePath}`, {
-                    message: 'Updated product details and images via Admin Panel',
-                    content: updatedContent,
-                    sha: fileSHA,
-                    branch: branch
-                }, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
-
-                document.getElementById('status-msg').innerHTML = `<div class="alert alert-success">Products updated successfully!</div>`;
-                fetchProducts();
-            } catch (error) {
-                const errorMsg = error.response?.data?.message || error.message;
-                document.getElementById('status-msg').innerHTML = `<div class="alert alert-danger">Error saving: ${errorMsg}</div>`;
+            if (imageUpload) {
+                const imageName = `${name.replace(/\s+/g, '_').toLowerCase()}.png`;
+                imageUrl = await uploadImage(imageUpload, imageName);
             }
+
+            // Declare the product after imageUrl is finalized
+            const product = {
+                id: index + 1,
+                name: name,
+                price: price,
+                image: imageUrl // Directly include imageUrl here
+            };
+
+            updatedProducts.push(product);
+        }
+
+        const updatedContent = btoa(JSON.stringify(updatedProducts, null, 2));
+        await axios.put(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${dataFilePath}`, {
+            message: 'Updated product details and images via Admin Panel',
+            content: updatedContent,
+            sha: fileSHA,
+            branch: branch
+        }, {
+            headers: { 'Authorization': `token ${token}` }
         });
+
+        document.getElementById('status-msg').innerHTML = `<div class="alert alert-success">Products updated successfully!</div>`;
+        fetchProducts();
+    } catch (error) {
+        const errorMsg = error.response?.data?.message || error.message;
+        document.getElementById('status-msg').innerHTML = `<div class="alert alert-danger">Error saving: ${errorMsg}</div>`;
+    }
+});
+
 
         fetchProducts();
     </script>
