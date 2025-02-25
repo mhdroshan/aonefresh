@@ -1,18 +1,5 @@
 [
-  {
-    "id": 1,
-    "name": "Normal Fruit Salad",
-    "price": 70
-  },
-  {
-    "id": 2,
-    "name": "Diet Fruit Salad",
-    "price": 100
-  },
-  {
-    "id": 3,
-    "name": "A One Special Fruit Salad",
-    "price": 150,
-    "image": "https://raw.githubusercontent.com/mhdroshan/aonefresh/main/assets/images/shop/a_one_special_fruit_salad.png"
-  }
+    { "id": 1, "name": "Normal Fruit Salad", "price": 70, "image": "https://raw.githubusercontent.com/mhdroshan/aonefresh/main/assets/images/shop/shop-fruit-salad.jpg" },
+    { "id": 2, "name": "Diet Fruit Salad", "price": 100, "image": "https://raw.githubusercontent.com/mhdroshan/aonefresh/main/assets/images/shop/shop-fruit-salad.jpg" },
+    { "id": 3, "name": "A One Special Fruit Salad", "price": 150, "image": "https://raw.githubusercontent.com/mhdroshan/aonefresh/main/assets/images/shop/shop-fruit-salad.jpg" }
 ]
