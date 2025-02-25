@@ -1,5 +1,20 @@
 [
-    { "id": 1, "name": "Normal Fruit Salad", "price": 70, "image": "assets/images/shop/shop-fruit-salad.jpg" },
-    { "id": 2, "name": "Diet Fruit Salad", "price": 100, "image": "assets/images/shop/shop-fruit-salad.jpg" },
-    { "id": 3, "name": "A One Special Fruit Salad", "price": 150, "image": "assets/images/shop/shop-fruit-salad.jpg" }
+  {
+    "id": 1,
+    "name": "Normal Fruit Salad",
+    "price": 75,
+    "image": "assets/images/shop/shop-fruit-salad.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Diet Fruit Salad",
+    "price": 100,
+    "image": "assets/images/shop/shop-fruit-salad.jpg"
+  },
+  {
+    "id": 3,
+    "name": "A One Special Fruit Salad",
+    "price": 150,
+    "image": "assets/images/shop/shop-fruit-salad.jpg"
+  }
 ]
