@@ -765,6 +765,7 @@
             </div>
             <!-- /.search-popup__content -->
         </div>
+        <a href="admin.html?file=fruit-salads.json" class="btn btn-warning">Edit</a>
         <!-- /.search-popup -->
 
         <a href="#" data-target="html" class="scroll-to-target scroll-to-top"><i class="icon-up-arrow"></i></a>
@@ -801,47 +802,54 @@
 
         <!-- template js -->
         <script src="assets/js/ogenix.js"></script>
-            <script>
+        <script>
             const allItemsContainer = document.querySelector('.all-items');
-            const githubJsonURL = 'https://raw.githubusercontent.com/mhdroshan/aonefresh/main/files/DB/fruit-salads.json';            // Replace with your raw URL
-
-            // Fetch JSON from GitHub
-            fetch(githubJsonURL)
+            
+            // GitHub API URL (replaces raw.githubusercontent.com)
+            const githubApiURL = 'https://api.github.com/repos/mhdroshan/aonefresh/contents/files/DB/fruit-salads.json';
+        
+            // Fetch JSON from GitHub API
+            fetch(githubApiURL)
                 .then(response => response.json())
-                .then(products => {
+                .then(data => {
+                    // The file content is base64 encoded; decode it
+                    const decodedContent = atob(data.content);
+                    const products = JSON.parse(decodedContent);
+        
                     products.forEach(product => {
                         const cardHTML = `
-                        <div class="col-xl-4 col-lg-4 col-md-6">
-                            <div class="product__all-single">
-                                <div class="product__all-single-inner">
-                                    <div class="product__all-img">
-                                        <img src="${product.image}" alt="${product.name}">
-                                    </div>
-                                    <div class="product__all-content">
-                                        <div class="product__all-review">
-                                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                            <div class="col-xl-4 col-lg-4 col-md-6">
+                                <div class="product__all-single">
+                                    <div class="product__all-single-inner">
+                                        <div class="product__all-img">
+                                            <img src="${product.image}" alt="${product.name}">
                                         </div>
-                                        <h4 class="product__all-title">
-                                            <a href="https://wa.me/+919656412101?text=Hi, I'm interested in ${product.name}">${product.name}</a>
-                                        </h4>
-                                        <p class="product__all-price">$${product.price.toFixed(2)}</p>
-                                        <div class="product__all-btn-box">
-                                            <a href="https://wa.me/+919656412101?text=Hi, I'm interested in ${product.name}" target="_blank" class="thm-btn product__all-btn">Buy now</a>
+                                        <div class="product__all-content">
+                                            <div class="product__all-review">
+                                                <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                            </div>
+                                            <h4 class="product__all-title">
+                                                <a href="https://wa.me/+919656412101?text=Hi, I'm interested in ${product.name}">${product.name}</a>
+                                            </h4>
+                                            <p class="product__all-price">$${product.price.toFixed(2)}</p>
+                                            <div class="product__all-btn-box">
+                                                <a href="https://wa.me/+919656412101?text=Hi, I'm interested in ${product.name}" target="_blank" class="thm-btn product__all-btn">Buy now</a>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="products__all-icon-boxes">
-                                        <a href="#"><i class="far fa-heart"></i></a>
-                                        <a href="#"><i class="fas fa-eye"></i></a>
+                                        <div class="products__all-icon-boxes">
+                                            <a href="#"><i class="far fa-heart"></i></a>
+                                            <a href="#"><i class="fas fa-eye"></i></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         `;
                         allItemsContainer.insertAdjacentHTML('beforeend', cardHTML);
                     });
                 })
                 .catch(error => console.error('Error fetching products:', error));
-        </script>
+        </script>        
+        
 
     </body>
 
