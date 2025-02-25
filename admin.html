@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Edit Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./assets/js/config.js"></script>
+</head>
+
+<body>
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Product Admin Panel</h2>
+        <div id="product-container"></div>
+        <button id="save-btn" class="btn btn-success mt-4">Save Changes</button>
+        <div id="status-msg" class="mt-3"></div>
+    </div>
+
+    <script>
+        const repoOwner = 'mhdroshan';
+        const repoName = 'aonefresh';
+        const dataFilePath = 'files/DB/fruit-salads.json'; // JSON file path
+        const imageFolderPath = 'assets/images/shop/'; // Image folder path
+        const branch = 'main';
+        const token = GITHUB_PAT; // Replace with your GitHub PAT
+
+        let fileSHA = '';
+
+        // Fetch existing JSON data
+        async function fetchProducts() {
+            try {
+                const res = await axios.get(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${dataFilePath}?ref=${branch}`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+
+                fileSHA = res.data.sha;
+                const content = JSON.parse(atob(res.data.content));
+                renderProducts(content);
+            } catch (error) {
+                document.getElementById('status-msg').innerHTML = `<div class="alert alert-danger">Error fetching products: ${error.message}</div>`;
+            }
+        }
+
+        // Render products with image upload
+        function renderProducts(products) {
+            const container = document.getElementById('product-container');
+            container.innerHTML = '';
+
+            products.forEach((product, index) => {
+                container.innerHTML += `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Product ${index + 1}</h5>
+                            <div class="mb-3">
+                                <label>Name:</label>
+                                <input type="text" class="form-control" id="name-${index}" value="${product.name}">
+                            </div>
+                            <div class="mb-3">
+                                <label>Price:</label>
+                                <input type="number" class="form-control" id="price-${index}" value="${product.price}">
+                            </div>
+                            <div class="mb-3">
+                                <label>Current Image:</label><br>
+                                <img src="${product.image}" alt="${product.name}" width="100"><br><br>
+                                <label>New Image (optional):</label>
+                                <input type="file" class="form-control" id="image-upload-${index}" accept="image/*">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Upload Image to GitHub
+        async function uploadImage(file, imageName) {
+            const reader = new FileReader();
+            return new Promise((resolve, reject) => {
+                reader.onloadend = async () => {
+                    const base64Content = reader.result.split(',')[1]; // Remove metadata
+
+                    try {
+                        const res = await axios.put(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${imageFolderPath}${imageName}`, {
+                            message: `Updated image ${imageName}`,
+                            content: base64Content,
+                            branch: branch
+                        }, {
+                            headers: { 'Authorization': `token ${token}` }
+                        });
+
+                        resolve(`https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branch}/${imageFolderPath}${imageName}`);
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                reader.onerror = () => reject(reader.error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Save changes to GitHub (including image uploads)
+        document.getElementById('save-btn').addEventListener('click', async () => {
+            const cards = document.querySelectorAll('.card');
+            const updatedProducts = [];
+
+            try {
+                for (let index = 0; index < cards.length; index++) {
+                    const name = document.getElementById(`name-${index}`).value;
+                    const price = parseFloat(document.getElementById(`price-${index}`).value);
+                    const imageUpload = document.getElementById(`image-upload-${index}`).files[0];
+
+                    let imageUrl = document.querySelector(`#image-upload-${index}`).previousElementSibling.src;
+
+                    // If new image uploaded, replace it
+                    if (imageUpload) {
+                        const imageName = `${name.replace(/\s+/g, '_').toLowerCase()}.png`; // Example: product_name.png
+                        imageUrl = await uploadImage(imageUpload, imageName);
+                    }
+
+                    updatedProducts.push({
+                        id: index + 1,
+                        name: name,
+                        price: price,
+                        image: imageUrl
+                    });
+                }
+
+                // Update JSON file with new data
+                const updatedContent = btoa(JSON.stringify(updatedProducts, null, 2));
+                await axios.put(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${dataFilePath}`, {
+                    message: 'Updated product details and images via Admin Panel',
+                    content: updatedContent,
+                    sha: fileSHA,
+                    branch: branch
+                }, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+
+                document.getElementById('status-msg').innerHTML = `<div class="alert alert-success">Products updated successfully!</div>`;
+                fetchProducts(); // Reload products after save
+            } catch (error) {
+                const errorMsg = error.response?.data?.message || error.message;
+                document.getElementById('status-msg').innerHTML = `<div class="alert alert-danger">Error saving: ${errorMsg}</div>`;
+            }
+        });
+
+        fetchProducts();
+    </script>
+</body>
+
+</html>
