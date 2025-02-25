@@ -1,0 +1,5 @@
+[
+    { "id": 1, "name": "Normal Fruit Salad", "price": 70, "image": "assets/images/shop/normal-fruit-salad.jpg" },
+    { "id": 2, "name": "Diet Fruit Salad", "price": 100, "image": "assets/images/shop/diet-fruit-salad.jpg" },
+    { "id": 3, "name": "A One Special Fruit Salad", "price": 150, "image": "assets/images/shop/aone-special-fruit-salad.jpg" }
+]
